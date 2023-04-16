@@ -51,6 +51,9 @@ void mostrarInicial() {
                case 5:
                     mostrarEdicaoDeUsuario();
                     break;
+               case 4: 
+                    
+                    break;
                case 7: 
                     rodando--;
                     break;
