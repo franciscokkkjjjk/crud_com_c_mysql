@@ -1,0 +1,3 @@
+void mostrarInicial(); 
+
+void mostrarListaDeUsuarios();
