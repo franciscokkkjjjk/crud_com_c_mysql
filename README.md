@@ -23,7 +23,9 @@ No arquivo */src/mysqli.c* é necessario configurar o *mysql_real_connect*, como
 mysql_real_connect(connect(Não mudar),"O ip da conexão MySQL", "seu_usuario_do_banco_de_dados", "senha_do_banco_de_dados", "Nome_do_Banco_de_dados", 0, NULL, 0)
 ```
 Em seu banco de dados deve conter uma tabela *usuarios* com a seguntes colunas:
--id
--nome
--idade
+
+- id
+- nome
+- idade
+
 Caso essa tabela não seja defina, o sistema pode apresentar algumas instabilidade.
