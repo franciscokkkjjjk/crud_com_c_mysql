@@ -12,6 +12,24 @@ void cadastrarUsuario(MYSQL* connect, const char* nome, int idade) {
     }
 }
 
+int procurarUsuario(MYSQL* connect, int id) {
+    char query[1024];
+    sprintf(query, "SELECT * FROM usuarios WHERE id=%d", id);
+    if(mysql_query(connect, query)) {
+        return 0;
+    }
+    MYSQL_RES* result = mysql_store_result(connect);
+    if(result == NULL) {
+        return 0;
+    }
+    MYSQL_ROW linha = mysql_fetch_row(result);
+    if(linha == NULL){
+        return 0;
+    }
+    return 1;
+    
+}
+
 void mostrarUsuario(MYSQL* connect, int id) {
     char query[1024];
     sprintf(query, "SELECT * FROM usuarios WHERE id=%d", id);
@@ -27,11 +45,12 @@ void mostrarUsuario(MYSQL* connect, int id) {
     MYSQL_ROW linha = mysql_fetch_row(resultado);
     if(linha == NULL) {
         printf("Pessoa não encotrada.\n");
+        mysql_free_result(resultado);
         return;
     }
-    printf("ID: %s\n", linha[0]);
-    printf("NOME: %s\n", linha[1]);
-    printf("IDADE: %s\n", linha[2]);
+    printf("-------------------------------------------------------------------------\n");
+    printf("ID: %s  NOME: %s  IDADE: %s anos\n", linha[0], linha[1], linha[2]);
+    printf("-------------------------------------------------------------------------\n\n");
 
     mysql_free_result(resultado);
 }
@@ -79,9 +98,9 @@ void mostrarTodosUsuarios(MYSQL* connect, int numeroDaPagina) {
 
         MYSQL_ROW linha;
         while((linha = mysql_fetch_row(result)) != NULL) {        
-            printf("ID: %s\n", linha[0]);
-            printf("NOME: %s\n", linha[1]);
-            printf("IDADE: %s\n", linha[2]);
+            printf("-------------------------------------------------------------------------\n");
+            printf("ID: %s  NOME: %s  IDADE: %s anos\n", linha[0], linha[1], linha[2]);
+            printf("-------------------------------------------------------------------------\n\n");
         }
         mysql_free_result(result);
     return;

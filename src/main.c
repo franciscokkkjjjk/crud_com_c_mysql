@@ -7,7 +7,14 @@
 
 MYSQL* inicializar_conecao(void);
 MYSQL* connect;
+
 void limparConsole(void);
+
+void mostrarListaDeUsuarios(void);
+
+void mostrarUmUsuarioEspecifico(void);
+
+void mostrarEdicaoDeUsuario(void);
 
 int main(void) {
      connect = inicializar_conecao();
@@ -35,9 +42,14 @@ void mostrarInicial() {
 
 
           switch(optSelecionadaUsuario) {
+               case 1:
+                    mostrarUmUsuarioEspecifico();
+                    break;
                case 2:
                     mostrarListaDeUsuarios(); 
-                    return;
+                    break;
+               case 5:
+                    mostrarEdicaoDeUsuario();
                     break;
                case 7: 
                     rodando--;
@@ -47,7 +59,7 @@ void mostrarInicial() {
      }
 }
 
-void mostrarListaDeUsuarios() {
+void mostrarListaDeUsuarios(void) {
      int numPag = 0;
      while (1)
      {
@@ -58,7 +70,7 @@ void mostrarListaDeUsuarios() {
           int opt = 0;
           printf("Todos usuarios cadastrados no banco de dados: \n\n");
           mostrarTodosUsuarios(connect, numPag);
-          printf("\n \033[32m 1 - Recarregar Lista | 2 - pagina Anterior | 3 - Proxima página | 4 - Sair \033[0m\n");
+          printf("\n \033[32m 1 - Recarregar Lista | 2 - pagina Anterior | 3 - Proxima página | 4 - Voltar \033[0m\n");
           
           scanf("%i", &opt);
           switch(opt) {
@@ -70,8 +82,7 @@ void mostrarListaDeUsuarios() {
                case 3: 
                     numPag++;
                     continue;
-               case 4: 
-                    mostrarInicial();
+               case 4:
                     return;
                     break;
                default:
@@ -82,6 +93,84 @@ void mostrarListaDeUsuarios() {
      
 }
 
+void mostrarUmUsuarioEspecifico(void) {
+     int rodando = 0;
+     while(rodando == 0) {
+          int opt;
+          int id;
+          limparConsole();
+          printf("Digite o id do usuario: ");
+          scanf("%i", &id);
+          mostrarUsuario(connect, id);
+          printf("\033[32m 1 - Buscar outro usuario | 2 - Voltar \033[0m\n"); // excluir  e editar
+          scanf("%i", &opt);
+          switch(opt) {
+               case 1:
+                    continue;
+               case 2:
+                    rodando--;
+                    return;
+                    break;
+               default:
+                    printf("Selecione uma opcao valida");
+          }
+     }
+}
+
+void mostrarEdicaoDeUsuario(void) {
+     int rodando = 0;
+     while(rodando == 0) {
+          int id;
+          char novoNome[255];
+          int novaIdade;
+          int nomeMudar = 0;
+          int idadeMudar = 0;
+          int opt;
+          limparConsole();
+          printf("\033[41m \033[1m \033[29m ************* EDICAO DE USUARIOS *************\033[0m\n\n");
+          printf("\033[32m 1 - Procurar usuario para edicao | 2 - Voltar \033[0m\n");
+          scanf("%i", &opt);
+          if(opt == 2) {
+               return;
+               break;
+          }
+          printf("Digite o id do usuario que será editado: ");
+          scanf("%i", &id);
+          if((procurarUsuario(connect, id)) == 1) {
+               printf("Usuario encontrado: \n\n");
+               mostrarUsuario(connect, id);
+               printf("Eh esse usuario? \n\n");
+               printf("\033[32m 1 - sim | 2 - nao | 3 - Voltar \033[0m\n");
+               scanf("%i", &opt);
+               if(opt == 1){
+                    printf("Digite o novo nome: ");
+                    scanf("%s", novoNome);
+                    printf("Digite o Nova idade: ");
+                    scanf("%i", &novaIdade);
+                    editarUsuario(connect, novoNome, novaIdade, id);
+                    printf("Dados Atualizados: \n\n");
+                    mostrarUsuario(connect, id);
+                    printf("\033[32m 1 - Editar um novo usuario | 2 - Voltar \033[0m\n");
+                    scanf("%i", &opt);
+                    switch(opt) {
+                         case 1: 
+                              continue;
+                              break;
+                         case 2: 
+                              return;
+                              break;
+                    }
+               } else if(opt == 3) {
+                    return;
+                    break;
+               } else {
+                    continue;
+               }
+          } else {
+               continue;
+          }
+     }
+}
 
 void limparConsole(void) {
      #ifdef _WIN32
